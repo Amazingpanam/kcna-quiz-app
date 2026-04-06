@@ -153,9 +153,7 @@
       "kubectl logs -f"
     ],
     "answer": "kubectl logs -f"
-  }
-]
-[
+  },
   {
     "question": "How to load data before Pod startup?",
     "options": [
@@ -350,9 +348,7 @@
       "LB Controller"
     ],
     "answer": "Cloud Controller Manager"
-  }
-]
-[
+  },
   {
     "question": "What does a Horizontal Pod Autoscaler (HPA) do?",
     "options": [
@@ -524,16 +520,6 @@
     "answer": "Storage request"
   },
   {
-    "question": "What is Helm?",
-    "options": [
-      "Package manager",
-      "Scheduler",
-      "Container runtime",
-      "Storage tool"
-    ],
-    "answer": "Package manager"
-  },
-  {
     "question": "What is Docker?",
     "options": [
       "Container runtime",
@@ -642,9 +628,7 @@
       "Managing nodes"
     ],
     "answer": "Sending notifications"
-  }
-]
-[
+  },
   {
     "question": "What is a container?",
     "options": [
