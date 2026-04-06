@@ -1,41 +1,35 @@
-let questions = [];
+// Questions embedded directly (first 5 questions - add all later)
+let questions = [
+  {
+    "question": "What native runtime is Open Container Initiative (OCI) compliant?",
+    "options": ["runC", "runV", "kata-containers", "gvisor"],
+    "answer": "runC"
+  },
+  {
+    "question": "Which API object is the recommended way to run a scalable, stateless application?",
+    "options": ["ReplicaSet", "Deployment", "DaemonSet", "Pod"],
+    "answer": "Deployment"
+  },
+  {
+    "question": "What is kubelet?",
+    "options": ["Dashboard", "Network proxy", "Scheduler", "Agent that ensures containers run in Pods"],
+    "answer": "Agent that ensures containers run in Pods"
+  },
+  {
+    "question": "CI/CD stands for?",
+    "options": ["Continuous Info/Development", "Continuous Integration/Development", "Cloud Integration/Cloud Development", "Continuous Integration/Continuous Deployment"],
+    "answer": "Continuous Integration/Continuous Deployment"
+  },
+  {
+    "question": "What does kube-proxy do?",
+    "options": ["Ingress control", "Forward traffic to endpoints", "Manage egress", "Manage API access"],
+    "answer": "Forward traffic to endpoints"
+  }
+];
+
 let currentQuestion = 0;
 let score = 0;
-let canAnswer = true; // Prevent double answers
-
-// Load questions from JSON file
-fetch("./questions.json")
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(data => {
-    // Handle multiple arrays by flattening
-    if (Array.isArray(data)) {
-      // Check if first element is an array (multiple arrays)
-      if (data.length > 0 && Array.isArray(data[0])) {
-        questions = data.flat();
-      } else {
-        questions = data;
-      }
-    }
-    
-    console.log("Loaded " + questions.length + " questions");
-    
-    if (questions.length === 0) {
-      throw new Error("No questions loaded!");
-    }
-    
-    showQuestion();
-    updateScore();
-  })
-  .catch(error => {
-    console.error("Error:", error);
-    document.getElementById("question").innerHTML = "❌ Failed to load questions.<br>Check that questions.json exists and is valid JSON.";
-    document.getElementById("options").innerHTML = "";
-  });
+let canAnswer = true;
 
 function showQuestion() {
   if (!questions.length || currentQuestion >= questions.length) return;
@@ -49,7 +43,7 @@ function showQuestion() {
   optionsDiv.innerHTML = "";
   canAnswer = true;
 
-  q.options.forEach((option, index) => {
+  q.options.forEach((option) => {
     const btn = document.createElement("button");
     btn.innerText = option;
     btn.className = "option-btn";
@@ -63,7 +57,7 @@ function updateScore() {
 }
 
 function checkAnswer(selected) {
-  if (!canAnswer) return; // Prevent multiple answers
+  if (!canAnswer) return;
   canAnswer = false;
   
   const correct = questions[currentQuestion].answer;
@@ -73,7 +67,6 @@ function checkAnswer(selected) {
     score++;
   }
   
-  // Show feedback
   const messageDiv = document.createElement("div");
   messageDiv.className = "message";
   
@@ -89,15 +82,11 @@ function checkAnswer(selected) {
   
   const optionsDiv = document.getElementById("options");
   optionsDiv.appendChild(messageDiv);
-  
-  // Update score display
   updateScore();
   
-  // Disable all option buttons
   const allBtns = document.querySelectorAll(".option-btn");
   allBtns.forEach(btn => btn.disabled = true);
   
-  // Auto-advance to next question after delay
   setTimeout(() => {
     currentQuestion++;
     
@@ -111,23 +100,10 @@ function checkAnswer(selected) {
 
 function completeQuiz() {
   const percentage = Math.round((score / questions.length) * 100);
-  let gradeMessage = "";
-  
-  if (percentage >= 90) gradeMessage = "🎉 Excellent! 🎉";
-  else if (percentage >= 70) gradeMessage = "👍 Good job! 👍";
-  else if (percentage >= 50) gradeMessage = "📚 Keep studying! 📚";
-  else gradeMessage = "💪 Try again! 💪";
-  
-  document.getElementById("question").innerHTML = `
-    🏆 Quiz Complete! 🏆<br><br>
-    ${gradeMessage}<br><br>
-    Your Score: ${score} / ${questions.length}<br>
-    (${percentage}%)
-  `;
+  document.getElementById("question").innerHTML = `🏆 Quiz Complete! 🏆<br><br>Your Score: ${score} / ${questions.length}<br>(${percentage}%)`;
   document.getElementById("options").innerHTML = "";
   document.getElementById("nextBtn").style.display = "none";
   
-  // Add restart button
   const restartBtn = document.createElement("button");
   restartBtn.innerText = "🔄 Restart Quiz";
   restartBtn.className = "restart-btn";
@@ -135,16 +111,13 @@ function completeQuiz() {
   document.querySelector(".container").appendChild(restartBtn);
 }
 
-// Next button handler
 document.getElementById("nextBtn").addEventListener("click", () => {
-  // Don't allow next if waiting for timeout or quiz is complete
   const btns = document.querySelectorAll(".option-btn");
   if (btns.length > 0 && btns[0].disabled && btns[0].parentElement.querySelector(".message")) {
-    return; // Still showing feedback
+    return;
   }
   
   if (currentQuestion < questions.length && !canAnswer) {
-    // Force move to next if user clicks Next instead of waiting
     currentQuestion++;
     if (currentQuestion < questions.length) {
       showQuestion();
@@ -153,3 +126,7 @@ document.getElementById("nextBtn").addEventListener("click", () => {
     }
   }
 });
+
+// Initialize
+showQuestion();
+updateScore();
