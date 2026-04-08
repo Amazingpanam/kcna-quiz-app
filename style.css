@@ -74,3 +74,12 @@ button:disabled {
 .restart-btn:hover {
   background: #e0a800;
 }
+
+#question, .option-btn {
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.container {
+  max-width: 800px;
+}
