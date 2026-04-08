@@ -79,7 +79,3 @@ button:disabled {
   word-wrap: break-word;
   white-space: normal;
 }
-
-.container {
-  max-width: 800px;
-}
